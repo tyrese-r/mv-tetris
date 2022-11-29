@@ -8,6 +8,9 @@
     - [ ] Delete row
     - [ ] Move rows above down
 - [ ] End game when tetromino hits ceiling
+- [ ] Draw tetrominoes on grid
+- [ ] Create grid data structure
+- [x] Draw grid
 
 # Thursday - Extensions
 - [ ] Add local scoring

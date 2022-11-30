@@ -1,16 +1,18 @@
 # Wednesday - MVP
 - [ ] Spawn tetrominoes
-- [ ] Snap tetrominoes to grid
-- [ ] Move tetrominoes down cell by cell
+- [x] Snap tetrominoes to grid
+- [x] Move tetrominoes down cell by cell
 - [ ] Add collision to tetrominoes
 - [ ] Rotate tetrominoes
 - [ ] Detect when a row is complete
     - [ ] Delete row
     - [ ] Move rows above down
 - [ ] End game when tetromino hits ceiling
-- [ ] Draw tetrominoes on grid
-- [ ] Create grid data structure
+- [x] Draw tetrominoes on grid
+- [x] Create grid data structure
 - [x] Draw grid
+
+- [ ] Move new tetrominoes if they can all move down together if not then stop them at that position
 
 # Thursday - Extensions
 - [ ] Add local scoring

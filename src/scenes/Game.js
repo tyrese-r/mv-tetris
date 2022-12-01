@@ -345,7 +345,6 @@ export default class Game extends Phaser.Scene {
     }
 
     lineCompletion() {
-        if (this.currentBlocks.length == 0) {
             // Detect line completion
             this.grid.forEach((row, index) => {
                 if (row.every(cell => cell == true)) {
@@ -354,7 +353,6 @@ export default class Game extends Phaser.Scene {
                     this.grid.unshift([false, false, false, false, false, false, false, false, false, false])
                 }
             })
-        }
     }
 
     rotateBlocks() {
@@ -452,6 +450,38 @@ export default class Game extends Phaser.Scene {
         //     })
         // })
 
+        // Check rotation
+        for (let i = 0; i < 3; i++) {
+            const newMiniGridRow = newMiniGrid[i];
+            for (let j = 0; j < 3; j++) {
+                const gridPosX = originPosition.x + j - 1
+                const gridPosY = originPosition.y + i - 1
+                if(gridPosX < 0 || gridPosX >= this.gridWidth) {
+                    return 
+                }
+                if(newMiniGrid[i][j] == true && this.grid[gridPosY][gridPosX] == true) {
+                    console.log('Overlapping')
+                    // Find another block at that position
+                    const overlappingBlock = this.currentBlocks.find(block => {
+                        if(block.x == gridPosX && block.y == gridPosY) {
+                            return true
+                        }
+                    })
+
+                    console.log(overlappingBlock)
+
+                    if(overlappingBlock == null) {
+                        console.log('Collide')
+                        return
+                    }
+                }
+
+               
+
+            }
+
+        }
+
         console.log(this.currentBlocks)
         this.currentBlocks.forEach(block => {
             this.grid[block.y][block.x] = false
@@ -468,6 +498,7 @@ export default class Game extends Phaser.Scene {
         //     this.currentBlocks.y = originPosition.x - 1
         // }
 
+        // Update blocks with new rotation
         for (let i = 0; i < 3; i++) {
             const newMiniGridRow = newMiniGrid[i];
             for (let j = 0; j < 3; j++) {
@@ -475,7 +506,7 @@ export default class Game extends Phaser.Scene {
                 const gridPosY = originPosition.y + i - 1
                 this.grid[gridPosY][gridPosX] = newMiniGrid[i][j]
 
-                if (this.grid[gridPosY][gridPosX] == 1) {
+                if (this.grid[gridPosY][gridPosX] == true) {
                     if (j == 1 && i == 1) {
                         this.currentBlocks[counter].isOrigin = true
                     } else {

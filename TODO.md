@@ -1,14 +1,18 @@
 # Wednesday - MVP
 - [x] Spawn tetrominoes
-- [ ] Spawn random tetrominoes
+    - [ ] Spawn all shapes
+    - [ ] Spawn at top
+    - [ ] Implement random bag system
+    - [ ] Spawn random tetrominoes
 - [x] Snap tetrominoes to grid
 - [x] Move tetrominoes down cell by cell
 - [x] Move tetrominoes horizontally
 - [x] Add collision to tetrominoes
 - [ ] Rotate tetrominoes
-    - [ ] Basic rotation
-    - [ ] Rotate with collision (ignore wall kicks)
+    - [x] Basic rotation
+    - [x] Rotate with collision (ignore wall kicks)
     - [ ] Rotate I shape
+    - [ ] Rotate all other shapes
 - [x] Detect when a row is complete
     - [x] Delete row
     - [x] Move rows above down

@@ -6,9 +6,12 @@
 - [x] Move tetrominoes horizontally
 - [x] Add collision to tetrominoes
 - [ ] Rotate tetrominoes
-- [ ] Detect when a row is complete
-    - [ ] Delete row
-    - [ ] Move rows above down
+    - [ ] Basic rotation
+    - [ ] Rotate with collision (ignore wall kicks)
+    - [ ] Rotate I shape
+- [x] Detect when a row is complete
+    - [x] Delete row
+    - [x] Move rows above down
 - [ ] End game when tetromino hits ceiling
 - [x] Draw tetrominoes on grid
 - [x] Create grid data structure

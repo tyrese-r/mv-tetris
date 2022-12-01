@@ -40,10 +40,6 @@ export default class Game extends Phaser.Scene {
         // this.currentBlocks.push(new Block('S', 5, 8))
         // this.currentBlocks.push(new Block('S', 6, 8))
         // this.currentBlocks.push(new Block('S', 6, 7))
-        this.currentBlocks.push(new Block('L', 5, 5))
-        this.currentBlocks.push(new Block('L', 6, 5, true))
-        this.currentBlocks.push(new Block('L', 7, 5))
-        this.currentBlocks.push(new Block('L', 7, 6))
         this.gridHeight = this.grid.length
         this.gridWidth = this.grid[0].length
 
@@ -74,6 +70,7 @@ export default class Game extends Phaser.Scene {
         const spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         const leftArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         const rightArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        const downArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         const upArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         const pKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
 
@@ -88,6 +85,7 @@ export default class Game extends Phaser.Scene {
 
         })
 
+
         upArrow.on('down', () => {
             this.rotateBlocks()
         })
@@ -96,6 +94,8 @@ export default class Game extends Phaser.Scene {
         pKey.on('down', () => {
             this.paused = !this.paused
         })
+
+        this.spawnNewBlocks()
 
     }
 
@@ -120,12 +120,19 @@ export default class Game extends Phaser.Scene {
             })
         })
         // console.log(this.pointer.position)
-        if (this.stepTimer >= 15) {
+        if (this.stepTimer >= 25) {
             this.gameStep()
 
         } else {
             this.stepTimer += this.time.timeScale
         }
+
+        if (this.stepTimer >= 5) {
+            if (this.cursors.down.isDown) {
+                this.gameStep()
+            }
+        }
+
 
         // console.log(this.cursors.space.onDown())
     }
@@ -159,6 +166,7 @@ export default class Game extends Phaser.Scene {
             this.currentBlocks = this.moveDown(this.currentBlocks)
 
         } else {
+            console.log('foo')
             this.currentBlocks = []
             this.lineCompletion()
             this.spawnNewBlocks()
@@ -166,7 +174,7 @@ export default class Game extends Phaser.Scene {
 
 
         // Line completetion detection
-    
+
     }
 
 
@@ -312,12 +320,25 @@ export default class Game extends Phaser.Scene {
     }
 
     spawnNewBlocks() {
-        if (this.currentBlocks.length == 0) {
-            this.currentBlocks.push(new Block('L', 5, 5))
-            this.currentBlocks.push(new Block('L', 6, 5, true))
-            this.currentBlocks.push(new Block('L', 7, 5))
-            this.currentBlocks.push(new Block('L', 7, 6))
+        if (this.currentBlocks.length > 0) {
+            return
         }
+        const spawnPosition = { x: 5, y: 1 }
+        let bag = [...Object.keys(Block.shapeCoords)]
+        const shapeIndex = Phaser.Math.Between(0, bag.length - 1)
+        const shapeLetter = bag.splice(shapeIndex, 1)
+        /** @type {{x: number, y: number, origin: boolean}[]} */
+        const shape = Block.shapeCoords[shapeLetter]
+        console.table({ shapeLetter })
+
+        shape.forEach((s, index) => {
+            this.currentBlocks.push(new Block(shapeLetter, spawnPosition.y + s.y, spawnPosition.x + s.x, s.origin))
+        })
+
+
+        // this.currentBlocks.push(new Block('L', 1, 5, true))
+        // this.currentBlocks.push(new Block('L', 2, 5))
+        // this.currentBlocks.push(new Block('L', 2, 6))
 
     }
 
@@ -345,14 +366,14 @@ export default class Game extends Phaser.Scene {
     }
 
     lineCompletion() {
-            // Detect line completion
-            this.grid.forEach((row, index) => {
-                if (row.every(cell => cell == true)) {
-                    console.log('Test')
-                    this.grid.splice(index, 1)
-                    this.grid.unshift([false, false, false, false, false, false, false, false, false, false])
-                }
-            })
+        // Detect line completion
+        this.grid.forEach((row, index) => {
+            if (row.every(cell => cell == true)) {
+                console.log('Test')
+                this.grid.splice(index, 1)
+                this.grid.unshift([false, false, false, false, false, false, false, false, false, false])
+            }
+        })
     }
 
     rotateBlocks() {
@@ -360,13 +381,52 @@ export default class Game extends Phaser.Scene {
         if (this.currentBlocks.length == 0) {
             return
         }
+        // Look for origin block and set position
+        const originBlock = this.currentBlocks.find(block => block.isOrigin)
         const shape = this.currentBlocks[0].shape
         if (shape == 'I') {
             // Do different rotation method
+            // Check if all ys match then set all x to match
+            this.currentBlocks.forEach(block => {
+                this.grid[block.y][block.x] = false
+            })
+            const originBlockX = originBlock.x + 0
+            const originBlockY = originBlock.y + 0
+            if (this.currentBlocks.every(block => block.y == originBlock.y)) {
+                // Is currently horizontal
+
+                // Change to vertical
+
+                this.currentBlocks[0].x = originBlockX
+                this.currentBlocks[1].x = originBlockX
+                this.currentBlocks[2].x = originBlockX
+                this.currentBlocks[3].x = originBlockX
+
+                this.currentBlocks[0].y = originBlockY - 2
+                this.currentBlocks[1].y = originBlockY - 1
+                this.currentBlocks[2].y = originBlockY
+                this.currentBlocks[3].y = originBlockY + 1
+            } else {
+                // Is currently vertical
+
+                // Change to horizontal
+                this.currentBlocks[0].x = originBlockX - 2
+                this.currentBlocks[1].x = originBlockX - 1
+                this.currentBlocks[2].x = originBlockX
+                this.currentBlocks[3].x = originBlockX + 1
+
+                this.currentBlocks[0].y = originBlockY
+                this.currentBlocks[1].y = originBlockY
+                this.currentBlocks[2].y = originBlockY
+                this.currentBlocks[3].y = originBlockY
+            }
+
+            this.currentBlocks.forEach(block => {
+                this.grid[block.y][block.x] = true
+            })
             return
         }
-        // Look for origin block and set position
-        const originBlock = this.currentBlocks.find(block => block.isOrigin)
+
         console.table(originBlock)
         const originPosition = { x: originBlock.x, y: originBlock.y }
 
@@ -456,27 +516,27 @@ export default class Game extends Phaser.Scene {
             for (let j = 0; j < 3; j++) {
                 const gridPosX = originPosition.x + j - 1
                 const gridPosY = originPosition.y + i - 1
-                if(gridPosX < 0 || gridPosX >= this.gridWidth) {
-                    return 
+                if (gridPosX < 0 || gridPosX >= this.gridWidth) {
+                    return
                 }
-                if(newMiniGrid[i][j] == true && this.grid[gridPosY][gridPosX] == true) {
+                if (newMiniGrid[i][j] == true && this.grid[gridPosY][gridPosX] == true) {
                     console.log('Overlapping')
                     // Find another block at that position
                     const overlappingBlock = this.currentBlocks.find(block => {
-                        if(block.x == gridPosX && block.y == gridPosY) {
+                        if (block.x == gridPosX && block.y == gridPosY) {
                             return true
                         }
                     })
 
                     console.log(overlappingBlock)
 
-                    if(overlappingBlock == null) {
+                    if (overlappingBlock == null) {
                         console.log('Collide')
                         return
                     }
                 }
 
-               
+
 
             }
 

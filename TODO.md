@@ -1,8 +1,9 @@
 # Wednesday - MVP
 - [ ] Spawn tetrominoes
+- [ ] Spawn random tetrominoes
 - [x] Snap tetrominoes to grid
 - [x] Move tetrominoes down cell by cell
-- [ ] Add collision to tetrominoes
+- [x] Add collision to tetrominoes
 - [ ] Rotate tetrominoes
 - [ ] Detect when a row is complete
     - [ ] Delete row

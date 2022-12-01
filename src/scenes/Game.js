@@ -18,7 +18,7 @@ export default class Game extends Phaser.Scene {
 
         const rows = []
         for (let i = 0; i < 20; i++) {
-            
+
             const row = []
             for (let j = 0; j < 10; j++) {
                 row.push(false)
@@ -27,7 +27,7 @@ export default class Game extends Phaser.Scene {
         }
         this.grid = rows
 
-        
+
         // const g = Array(25).fill(Array(10).fill(false))
         // Fill all
         // this.grid[5][9] = true
@@ -58,18 +58,27 @@ export default class Game extends Phaser.Scene {
         });
         // loop through each grid
 
-        
+
 
         console.log(this.gridHeight)
-        console.log(this.checkCollisionGround(5, 7))
+        console.log(this.checkCollisionSouth(5, 7))
         // this.gameStep()
 
         this.cursors = this.input.keyboard.createCursorKeys()
 
         const spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        const leftArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        const rightArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         spaceBar.on('down', () => {
             this.spawnNewBlocks()
+        })
+        leftArrow.on('down', () => {
+            this.moveHorizontally('west')
+        })
+        rightArrow.on('down', () => {
+            this.moveHorizontally('east')
+
         })
 
     }
@@ -85,17 +94,17 @@ export default class Game extends Phaser.Scene {
             row.forEach((cell, j) => {
                 //console.log(cell)
                 if (cell) {
-                    this.allRectangles.push(this.add.rectangle((j * cellWidth) + cellWidth/2, (i * cellHeight) + cellHeight/2, cellWidth, cellHeight, 0xff0000))
-                }else{
+                    this.allRectangles.push(this.add.rectangle((j * cellWidth) + cellWidth / 2, (i * cellHeight) + cellHeight / 2, cellWidth, cellHeight, 0xff0000))
+                } else {
                     // this.add.rectangle((j * cellWidth) + cellWidth/2, (i * cellHeight) + cellHeight/2, cellWidth, cellHeight, 0x000000)
                 }
             })
         })
         // console.log(this.pointer.position)
-        if(this.stepTimer >= 25) {
+        if (this.stepTimer >= 25) {
             this.gameStep()
             this.stepTimer = 0
-        }else{
+        } else {
             this.stepTimer += this.time.timeScale
         }
 
@@ -106,7 +115,7 @@ export default class Game extends Phaser.Scene {
 
         const cellWidth = 24
         const cellHeight = 24
-        
+
         // for (let i = this.gridHeight - 1; i >= 0; i--) {
         //     const row = this.grid[i];
 
@@ -118,48 +127,93 @@ export default class Game extends Phaser.Scene {
         //                 this.moveDown(i,j)
         //             }
         //         }
-                
-                
+
+
         //     }
-        
-            
+
+
         // }
 
-        if(this.checkIfAllBlocksCanMoveDown(this.currentBlocks)){
+        if (this.checkIfAllBlocksCanMove(this.currentBlocks, 'south')) {
             //move all blocks down
-           this.currentBlocks = this.moveDown(this.currentBlocks)
+            this.currentBlocks = this.moveDown(this.currentBlocks)
 
-        }else{
+        } else {
             this.currentBlocks = []
         }
     }
 
 
     // Check if block can move down
-    checkCollisionGround(y, x) {
-        
+    checkCollisionSouth(y, x) {
+
         // If at bottom return false
-        if (y == this.gridHeight-1) {
+        if (y == this.gridHeight - 1) {
             return false
         }
 
         // Check if cell below is free
-        if(this.grid[y+1][x] == true) {
+        if (this.grid[y + 1][x] == true) {
             // Check if cell is current block
-            const inCurrentBlocks = this.currentBlocks.some(block => block.x == x && block.y == y+1)
+            const inCurrentBlocks = this.currentBlocks.some(block => block.x == x && block.y == y + 1)
 
-            if(inCurrentBlocks) {
+            if (inCurrentBlocks) {
                 return true
-            }else {
+            } else {
                 return false
             }
-
-            return false
         }
 
         return true
-        
-        
+
+
+    }
+
+    checkCollisionEast(y, x) {
+
+        // If at bottom return false
+        if (x == this.gridWidth - 1) {
+            return false
+        }
+
+        // Check if cell below is free
+        if (this.grid[y][x + 1] == true) {
+            // Check if cell is current block
+            const inCurrentBlocks = this.currentBlocks.some(block => block.x == x + 1 && block.y == y)
+
+            if (inCurrentBlocks) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        return true
+
+
+    }
+    checkCollisionWest(y, x) {
+
+        // If at bottom return false
+        if (x == 0) {
+            return false
+        }
+
+        // Check if cell below is free
+        if (this.grid[y][x - 1] == true) {
+            // Check if cell is current block
+            const inCurrentBlocks = this.currentBlocks.some(block => block.x == x - 1 && block.y == y)
+
+            if (inCurrentBlocks) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+        return true
+
+
     }
 
     // Move down
@@ -174,7 +228,7 @@ export default class Game extends Phaser.Scene {
             this.grid[block.y][block.x] = false
         })
         blocks.map(block => {
-            
+
             block.y += 1
             this.grid[block.y][block.x] = true
             return block
@@ -184,8 +238,8 @@ export default class Game extends Phaser.Scene {
         console.log(this.currentBlocks)
 
         // console.log(this.currentBlocks)
-        
-        
+
+
         // this.grid[y][x] = false
 
         // console.log(this.grid[y][x])
@@ -197,10 +251,18 @@ export default class Game extends Phaser.Scene {
      * 
      * @param {{x, y}[]} blocks 
      */
-    checkIfAllBlocksCanMoveDown(blocks){
+    checkIfAllBlocksCanMove(blocks, direction) {
         const results = blocks.map(block => {
             // console.log(block)
-            return this.checkCollisionGround(block.y, block.x)
+            if (direction == 'south') {
+                return this.checkCollisionSouth(block.y, block.x)
+            } else if (direction == 'east') {
+                return this.checkCollisionEast(block.y, block.x)
+            } else if (direction == 'west') {
+                return this.checkCollisionWest(block.y, block.x)
+
+            }
+
         })
         // console.log(blocks)
         // console.log(results)
@@ -211,20 +273,43 @@ export default class Game extends Phaser.Scene {
     updatePointer(pointer) {
         this.pointerX = pointer.x
         this.pointerY = pointer.y
-        this.pointerCellX = Phaser.Math.FloorTo(this.pointerX/24, 0)
-        this.pointerCellY = Phaser.Math.FloorTo(this.pointerY/24, 0)
+        this.pointerCellX = Phaser.Math.FloorTo(this.pointerX / 24, 0)
+        this.pointerCellY = Phaser.Math.FloorTo(this.pointerY / 24, 0)
         console.log(` x: ${this.pointerCellX}, y: ${this.pointerCellY}`)
         console.log(this.grid[this.pointerCellY][this.pointerCellX])
 
     }
 
     spawnNewBlocks() {
-        if(this.currentBlocks.length == 0) {
+        if (this.currentBlocks.length == 0) {
             this.currentBlocks.push(new Block('S', 5, 8))
             this.currentBlocks.push(new Block('S', 5, 7))
             this.currentBlocks.push(new Block('S', 6, 7))
             this.currentBlocks.push(new Block('S', 6, 6))
         }
+
+    }
+
+    // This can happen every frame
+    moveHorizontally(direction) {
+        let offset = direction == 'east' ? 1 : -1
+        console.log(offset)
+        if (this.checkIfAllBlocksCanMove(this.currentBlocks, direction)) {
+            //move all blocks down
+            //this.currentBlocks = this.moveHorizontally(this.currentBlocks)
+            this.currentBlocks.forEach(block => {
+                this.grid[block.y][block.x] = false
+            })
+            this.currentBlocks.map(block => {
+    
+                block.x += offset
+                this.grid[block.y][block.x] = true
+                return block
+            })
+
+        }
         
+
+        // return blocks
     }
 }

@@ -35,10 +35,14 @@ export default class Game extends Phaser.Scene {
         // this.grid[6][8] = true
         // this.grid[6][7] = true
 
-        this.currentBlocks.push(new Block('S', 5, 9))
-        this.currentBlocks.push(new Block('S', 5, 8))
-        this.currentBlocks.push(new Block('S', 6, 8))
-        this.currentBlocks.push(new Block('S', 6, 7))
+        // this.currentBlocks.push(new Block('S', 5, 9))
+        // this.currentBlocks.push(new Block('S', 5, 8))
+        // this.currentBlocks.push(new Block('S', 6, 8))
+        // this.currentBlocks.push(new Block('S', 6, 7))
+        this.currentBlocks.push(new Block('L', 5, 5))
+        this.currentBlocks.push(new Block('L', 6, 5))
+        this.currentBlocks.push(new Block('L', 7, 5))
+        this.currentBlocks.push(new Block('L', 7, 6))
         this.gridHeight = this.grid.length
         this.gridWidth = this.grid[0].length
 
@@ -101,7 +105,7 @@ export default class Game extends Phaser.Scene {
             })
         })
         // console.log(this.pointer.position)
-        if (this.stepTimer >= 25) {
+        if (this.stepTimer >= 20) {
             this.gameStep()
             this.stepTimer = 0
         } else {
@@ -141,6 +145,10 @@ export default class Game extends Phaser.Scene {
         } else {
             this.currentBlocks = []
         }
+
+
+        // Line completetion detection
+        this.lineCompletion()
     }
 
 
@@ -282,10 +290,10 @@ export default class Game extends Phaser.Scene {
 
     spawnNewBlocks() {
         if (this.currentBlocks.length == 0) {
-            this.currentBlocks.push(new Block('S', 5, 8))
-            this.currentBlocks.push(new Block('S', 5, 7))
-            this.currentBlocks.push(new Block('S', 6, 7))
-            this.currentBlocks.push(new Block('S', 6, 6))
+            this.currentBlocks.push(new Block('L', 5, 5))
+            this.currentBlocks.push(new Block('L', 6, 5))
+            this.currentBlocks.push(new Block('L', 7, 5))
+            this.currentBlocks.push(new Block('L', 7, 6))
         }
 
     }
@@ -301,15 +309,31 @@ export default class Game extends Phaser.Scene {
                 this.grid[block.y][block.x] = false
             })
             this.currentBlocks.map(block => {
-    
+
                 block.x += offset
                 this.grid[block.y][block.x] = true
                 return block
             })
 
         }
-        
+
 
         // return blocks
+    }
+
+    lineCompletion() {
+        // Detect line completion
+        this.grid.forEach((row, index) => {
+            if (row.every(cell => cell == true)) {
+                console.log('Test')
+                this.grid.splice(index, 1)
+                this.grid.unshift([false, false, false, false, false, false, false, false, false, false])
+            }
+        })
+
+        // If true then remove that row
+        // Move all rows above down
+        // this.grid.unshift or something
+        // DO NOT TOUCH this.
     }
 }

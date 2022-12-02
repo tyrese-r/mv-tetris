@@ -1,4 +1,4 @@
-# Wednesday - MVP
+# MVP
 - [x] Spawn tetrominoes
     - [x] Spawn all shapes
     - [x] Spawn at top
@@ -23,17 +23,22 @@
 
 - [x] Move new tetrominoes if they can all move down together if not then stop them at that position
 
-# Thursday - Extensions
-- [ ] Add local scoring
-- [ ] Implement easy rotate
+# Extensions
+- [ ] Increase grid size and make blocks spawn outside viewable area
+- [ ] Upload to hosting server (github pages)
+- [ ] Add scoring system
 - [ ] Speed the game up over time
-- [ ] Add music
 - [ ] Show next tetromino
 - [ ] Hold tetromino
-
-# Friday
 - [ ] Add menu
-- [ ] Upload to hosting server
 
-# Bugs
+
+# Other extensions
+- [ ] Implement easy rotate (where player can rotate if on the ground)
+- [ ] Improve css of page
+- [ ] Add music
+- [ ] Internet leaderboard
+
+
+# Bugs identified
 - [ ] Fix I shape collider when rotating

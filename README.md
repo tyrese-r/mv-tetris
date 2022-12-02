@@ -1,6 +1,6 @@
 # Tetris clone
 This is a clone of tetris I made using phaser.js
-Play [here](https://tyrese-r.github.io/mv-tetris)
+Play [here](https://mv-tetris.onrender.com/)
 # TODO List
 ## MVP
 - [x] Spawn tetrominoes
@@ -29,7 +29,7 @@ Play [here](https://tyrese-r.github.io/mv-tetris)
 
 ## Extensions
 - [ ] Increase grid size and make blocks spawn outside viewable area
-- [ ] Upload to hosting server (github pages)
+- [x] Upload to hosting server (render)
 - [ ] Add scoring system
 - [ ] Speed the game up over time
 - [ ] Show next tetromino

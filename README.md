@@ -1,4 +1,8 @@
-# MVP
+# Tetris clone
+This is a clone of tetris I made using phaser.js
+Play [here](https://tyrese-r.github.io/mv-tetris)
+# TODO List
+## MVP
 - [x] Spawn tetrominoes
     - [x] Spawn all shapes
     - [x] Spawn at top
@@ -23,7 +27,7 @@
 
 - [x] Move new tetrominoes if they can all move down together if not then stop them at that position
 
-# Extensions
+## Extensions
 - [ ] Increase grid size and make blocks spawn outside viewable area
 - [ ] Upload to hosting server (github pages)
 - [ ] Add scoring system
@@ -33,12 +37,12 @@
 - [ ] Add menu
 
 
-# Other extensions
+## Other extensions
 - [ ] Implement easy rotate (where player can rotate if on the ground)
 - [ ] Improve css of page
 - [ ] Add music
 - [ ] Internet leaderboard
 
 
-# Bugs identified
+## Bugs identified
 - [ ] Fix I shape collider when rotating

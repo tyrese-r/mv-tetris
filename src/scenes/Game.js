@@ -67,7 +67,7 @@ export default class Game extends Phaser.Scene {
         scene.cameras.main.height = 100
         scene.cameras.main.width = 240
 
-        this.cameras.main.scrollY = 97
+        this.cameras.main.scrollY = 96
 
         this.cameras.main.y = 0
         this.cameras.main.x = 120

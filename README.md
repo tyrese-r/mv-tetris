@@ -1,7 +1,16 @@
 # Tetris clone
 This is a clone of tetris I made using phaser.js
 Play [here](https://mv-tetris.onrender.com/)
-# TODO List
+# How to play
+- Move with left and right arrow keys
+- Rotate clockwise with up arrow key
+- Move down with down arrow key
+- Press X to hold a shape
+- Press P to pause
+
+![Screenshot 2022-12-02 at 15 49 50](https://user-images.githubusercontent.com/26927583/205332148-724e7a92-1e7c-45e1-a7e4-b3e4e4ce06ce.png)
+
+# Tasks and features
 ## MVP
 - [x] Spawn tetrominoes
     - [x] Spawn all shapes

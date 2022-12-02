@@ -20,7 +20,7 @@ Play [here](https://mv-tetris.onrender.com/)
 - [x] Detect when a row is complete
     - [x] Delete row
     - [x] Move rows above down
-- [ ] End game when tetromino hits ceiling
+- [x] End game when tetromino hits ceiling
 - [x] Draw tetrominoes on grid
 - [x] Create grid data structure
 - [x] Draw grid
@@ -28,7 +28,7 @@ Play [here](https://mv-tetris.onrender.com/)
 - [x] Move new tetrominoes if they can all move down together if not then stop them at that position
 
 ## Extensions
-- [ ] Increase grid size and make blocks spawn outside viewable area
+- [x] Increase grid size and make blocks spawn outside viewable area
 - [x] Upload to hosting server (render)
 - [ ] Add scoring system
 - [ ] Speed the game up over time

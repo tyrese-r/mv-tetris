@@ -18,7 +18,7 @@ export default class Game extends Phaser.Scene {
         this.currentBlocks = []
 
         const rows = []
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 24; i++) {
 
             const row = []
             for (let j = 0; j < 10; j++) {
@@ -42,6 +42,7 @@ export default class Game extends Phaser.Scene {
         // this.currentBlocks.push(new Block('S', 6, 7))
         this.gridHeight = this.grid.length
         this.gridWidth = this.grid[0].length
+        this.cellSize = 24
 
         console.log(this.input.activePointer)
         this.pointerX = 0
@@ -54,17 +55,34 @@ export default class Game extends Phaser.Scene {
 
 
     create() {
+        window.scene = this
+        // Create new camera
+        // const camera1 = this.cameras.add(0, 0, 50, 50).setZoom(0.5);
+        // this.cameras.main = camera1
+        // this.scene.cameras.main
+
+        // scene.cameras.main.height = 100
+
+        scene.cameras.main.setBackgroundColor(0x2e2e2e)
+        scene.cameras.main.height = 100
+        scene.cameras.main.width = 240
+
+        this.cameras.main.scrollY = 97
+
+        this.cameras.main.y = 0
+
+        this.cameras.main.height =500
+
+
+        // console.log(typeof (ma))
+        // console.log()
         this.input.on('pointermove', (pointer) => {
             this.updatePointer(pointer)
         });
         // loop through each grid
 
 
-
-        console.log(this.gridHeight)
-        console.log(this.checkCollisionSouth(5, 7))
-        // this.gameStep()
-
+        this.isBlockAtCeiling = false
         this.cursors = this.input.keyboard.createCursorKeys()
 
         const spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -100,6 +118,9 @@ export default class Game extends Phaser.Scene {
     }
 
     update() {
+        if(this.isBlockAtCeiling) {
+            this.stepTimer = 0
+        }
         if (this.paused) {
             this.stepTimer = 0
         }
@@ -113,7 +134,8 @@ export default class Game extends Phaser.Scene {
             row.forEach((cell, j) => {
                 //console.log(cell)
                 if (cell) {
-                    this.allRectangles.push(this.add.rectangle((j * cellWidth) + cellWidth / 2, (i * cellHeight) + cellHeight / 2, cellWidth, cellHeight, 0xff0000))
+                    const color = this.currentBlocks.some(block => block.x == j && block.y == i) ? 0xf57600 : 0x8babf1
+                    this.allRectangles.push(this.add.rectangle((j * cellWidth) + cellWidth / 2, (i * cellHeight) + cellHeight / 2, cellWidth, cellHeight, color))
                 } else {
                     // this.add.rectangle((j * cellWidth) + cellWidth/2, (i * cellHeight) + cellHeight/2, cellWidth, cellHeight, 0x000000)
                 }
@@ -166,7 +188,12 @@ export default class Game extends Phaser.Scene {
             this.currentBlocks = this.moveDown(this.currentBlocks)
 
         } else {
-            console.log('foo')
+            
+            // Check if game over
+            this.isBlockAtCeiling = this.currentBlocks.some(block => block.y <= 4)
+            if(this.isBlockAtCeiling) {
+                alert('Game over!')
+            }
             this.currentBlocks = []
             this.lineCompletion()
             this.spawnNewBlocks()
@@ -369,7 +396,6 @@ export default class Game extends Phaser.Scene {
         // Detect line completion
         this.grid.forEach((row, index) => {
             if (row.every(cell => cell == true)) {
-                console.log('Test')
                 this.grid.splice(index, 1)
                 this.grid.unshift([false, false, false, false, false, false, false, false, false, false])
             }
@@ -427,7 +453,7 @@ export default class Game extends Phaser.Scene {
             return
         }
 
-        console.table(originBlock)
+        // console.table(originBlock)
         const originPosition = { x: originBlock.x, y: originBlock.y }
 
         const miniGrid = [
@@ -435,7 +461,7 @@ export default class Game extends Phaser.Scene {
             [0, 1, 0],
             [0, 0, 0],
         ]
-        console.log(originPosition)
+        // console.log(originPosition)
         const currentBlocksCopy = [...this.currentBlocks]
         // const debugArray = []
         currentBlocksCopy.map(block => {
@@ -455,12 +481,12 @@ export default class Game extends Phaser.Scene {
             // console.log(block)
         })
 
-        console.log(`${miniGrid[0].join('')}\n${miniGrid[1].join('')}\n${miniGrid[2].join('')}`)
+        // console.log(`${miniGrid[0].join('')}\n${miniGrid[1].join('')}\n${miniGrid[2].join('')}`)
 
 
         // Convert minigrid to string
         const shapeString = (`${miniGrid[0].join('')}${miniGrid[1].join('')}${miniGrid[2].join('')}`)
-        console.log(shapeString)
+        // console.log(shapeString)
 
         // console.table(debugArray)
         // Get adjacent cells
@@ -477,7 +503,7 @@ export default class Game extends Phaser.Scene {
         const nextRotationString = blockRotationMap[nextRotationStringIndex]
 
 
-        console.log(nextRotationString)
+        // console.log(nextRotationString)
         // Replace on grid
 
         // const newMiniGrid = [
@@ -499,7 +525,7 @@ export default class Game extends Phaser.Scene {
         })
 
         // Update all Block objects
-        console.log(`${newMiniGrid[0].join('')}\n${newMiniGrid[1].join('')}\n${newMiniGrid[2].join('')}`)
+        // console.log(`${newMiniGrid[0].join('')}\n${newMiniGrid[1].join('')}\n${newMiniGrid[2].join('')}`)
         // newMiniGrid.forEach((row, i) => {
         //     row.forEach((cell, j) => {
         //         const gridPositionX = j - 1 + originBlock.x
@@ -520,7 +546,7 @@ export default class Game extends Phaser.Scene {
                     return
                 }
                 if (newMiniGrid[i][j] == true && this.grid[gridPosY][gridPosX] == true) {
-                    console.log('Overlapping')
+                    // console.log('Overlapping')
                     // Find another block at that position
                     const overlappingBlock = this.currentBlocks.find(block => {
                         if (block.x == gridPosX && block.y == gridPosY) {
@@ -528,10 +554,10 @@ export default class Game extends Phaser.Scene {
                         }
                     })
 
-                    console.log(overlappingBlock)
+                    // console.log(overlappingBlock)
 
                     if (overlappingBlock == null) {
-                        console.log('Collide')
+                        console.log('Did not rotate because of collision')
                         return
                     }
                 }

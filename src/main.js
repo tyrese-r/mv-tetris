@@ -7,7 +7,7 @@ import * as SceneKeys from './consts/SceneKeys'
 // import WebFontFile from "./scenes/WebFontFile";
 
 const config = {
-  width: 24*10,
+  width: 24*20,
   height: 24*20,
   type: Phaser.AUTO,
 }

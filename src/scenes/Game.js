@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Block from "../classes/Block";
+import { BLUE, ORANGE } from "../consts/Colors";
 
 /**
  *  Keeping it simple
@@ -159,7 +160,7 @@ export default class Game extends Phaser.Scene {
             row.forEach((cell, j) => {
                 //console.log(cell)
                 if (cell) {
-                    const color = this.currentBlocks.some(block => block.x == j && block.y == i) ? 0xf57600 : 0x8babf1
+                    const color = this.currentBlocks.some(block => block.x == j && block.y == i) ? ORANGE : BLUE
                     this.allRectangles.push(this.add.rectangle((j * cellWidth) + cellWidth / 2, (i * cellHeight) + cellHeight / 2, cellWidth, cellHeight, color))
                 } else {
                     // this.add.rectangle((j * cellWidth) + cellWidth/2, (i * cellHeight) + cellHeight/2, cellWidth, cellHeight, 0x000000)

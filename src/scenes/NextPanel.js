@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import Block from "../classes/Block";
+import { BLUE, ORANGE } from "../consts/Colors";
 Block
 
 export default class ScorePanel extends Phaser.Scene {
@@ -36,7 +37,7 @@ export default class ScorePanel extends Phaser.Scene {
             const shape = Block.shapeCoords[shapeLetter]
             shape.forEach((s) => {
 
-                this.allRectangles.push(this.add.rectangle(xOrigin + (s.x * cellSize), yOrigin + (s.y * cellSize), cellSize, cellSize, 0xff0000))
+                this.allRectangles.push(this.add.rectangle(xOrigin + (s.x * cellSize), yOrigin + (s.y * cellSize), cellSize, cellSize, ORANGE))
                 // console.log(s)
                 // this.currentBlocks.push(new Block(shapeLetter, spawnPosition.y + s.y, spawnPosition.x + s.x, s.origin))
             })
@@ -50,7 +51,7 @@ export default class ScorePanel extends Phaser.Scene {
             const shape = Block.shapeCoords[holdShapeLetter]
             shape.forEach((s) => {
 
-                this.allRectangles.push(this.add.rectangle(xOrigin + (s.x * cellSize), yOrigin + (s.y * cellSize), cellSize, cellSize, 0xff0000))
+                this.allRectangles.push(this.add.rectangle(xOrigin + (s.x * cellSize), yOrigin + (s.y * cellSize), cellSize, cellSize, ORANGE))
                 // console.log(s)
                 // this.currentBlocks.push(new Block(shapeLetter, spawnPosition.y + s.y, spawnPosition.x + s.x, s.origin))
             })

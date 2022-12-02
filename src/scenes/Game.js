@@ -6,10 +6,12 @@ import Block from "../classes/Block";
  */
 export default class Game extends Phaser.Scene {
     preload() {
-
+        this.registry.score = 0
     }
 
     init() {
+        console.log('Started Game Scene')
+
         // Create empty array 
         // create grid
         this.grid = []
@@ -72,7 +74,7 @@ export default class Game extends Phaser.Scene {
         this.cameras.main.y = 0
         this.cameras.main.x = 120
 
-        this.cameras.main.height =500
+        this.cameras.main.height = 500
 
 
         // console.log(typeof (ma))
@@ -119,7 +121,7 @@ export default class Game extends Phaser.Scene {
     }
 
     update() {
-        if(this.isBlockAtCeiling) {
+        if (this.isBlockAtCeiling) {
             this.stepTimer = 0
         }
         if (this.paused) {
@@ -189,10 +191,10 @@ export default class Game extends Phaser.Scene {
             this.currentBlocks = this.moveDown(this.currentBlocks)
 
         } else {
-            
+
             // Check if game over
             this.isBlockAtCeiling = this.currentBlocks.some(block => block.y <= 4)
-            if(this.isBlockAtCeiling) {
+            if (this.isBlockAtCeiling) {
                 alert('Game over!')
             }
             this.currentBlocks = []
@@ -395,12 +397,24 @@ export default class Game extends Phaser.Scene {
 
     lineCompletion() {
         // Detect line completion
+        let combo = 0
+
+        // Scores for each line clear
+        const comboScoreValues = [0, 40, 100, 300, 1200]
         this.grid.forEach((row, index) => {
             if (row.every(cell => cell == true)) {
                 this.grid.splice(index, 1)
                 this.grid.unshift([false, false, false, false, false, false, false, false, false, false])
+
+                // Add to score
+                combo += 1
             }
         })
+        // Clamp max combo to 4
+        combo = Math.min(combo, 4)
+        // Add to score
+        this.registry.score += comboScoreValues[combo]
+
     }
 
     rotateBlocks() {

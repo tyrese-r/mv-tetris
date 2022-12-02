@@ -30,10 +30,10 @@ Play [here](https://mv-tetris.onrender.com/)
 ## Extensions
 - [x] Increase grid size and make blocks spawn outside viewable area
 - [x] Upload to hosting server (render)
-- [ ] Add scoring system
+- [x] Add scoring system
 - [ ] Speed the game up over time
-- [ ] Show next tetromino
-- [ ] Hold tetromino
+- [x] Show next tetromino
+- [x] Hold tetromino
 - [ ] Add menu
 
 

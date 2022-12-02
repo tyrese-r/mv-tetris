@@ -52,19 +52,9 @@ Object.keys(shapes).forEach(key => {
     console.log(shape)
 
     for (let i = 0; i < 4; i++) {
+        // Copied code for how to rotate a 2d array
         // https://stackoverflow.com/a/58668351
         shape = shape[0].map((val, index) => shape.map(row => row[index]).reverse())
-    
-    
-        // console.log(`${key}`)
-        // console.log(shape[0])
-        // console.log(shape[1])
-        // console.log(shape[2])
-        // console.log(`\n`)
-
-        
-        // Convert to string
-        // console.log()
 
         shapeRotations[key].push(`${shape[0].join('')}${shape[1].join('')}${shape[2].join('')}`)
        
@@ -72,9 +62,3 @@ Object.keys(shapes).forEach(key => {
     }
 })
 console.log(shapeRotationCoords)
-
-
-// FInd middle cell:
-// Find adjacent cells then add to 2d array
-// Find the pattern that matches
-// Replace with next pattern / check for collisions first

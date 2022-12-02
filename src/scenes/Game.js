@@ -7,6 +7,7 @@ import Block from "../classes/Block";
 export default class Game extends Phaser.Scene {
     preload() {
         this.registry.score = 0
+        // this.registry.bag = []
     }
 
     init() {
@@ -53,6 +54,19 @@ export default class Game extends Phaser.Scene {
         this.stepTimer = 0
 
         this.allRectangles = []
+
+        // Add items to bag and shuffle
+        this.registry.bag = []
+        this.registry.nextBag = []
+        this.registry.bag.push('J', 'L', 'I', 'O', 'S', 'Z', 'T')
+        this.registry.nextBag.push('J', 'L', 'I', 'O', 'S', 'Z', 'T')
+        this.registry.bag.sort(() => Math.random() - 0.5)
+        this.registry.nextBag.sort(() => Math.random() - 0.5)
+        console.log(this.registry.bag.concat(this.registry.nextBag))
+
+        this.registry.holdShape = null
+        this.holdTurn = false
+
     }
 
 
@@ -94,6 +108,7 @@ export default class Game extends Phaser.Scene {
         const downArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         const upArrow = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         const pKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.P);
+        const xKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
         spaceBar.on('down', () => {
             this.spawnNewBlocks()
@@ -114,6 +129,13 @@ export default class Game extends Phaser.Scene {
 
         pKey.on('down', () => {
             this.paused = !this.paused
+        })
+
+        xKey.on('down', () => {
+            if (!this.holdTurn) {
+                this.spawnNewBlocks(true)
+            }
+
         })
 
         this.spawnNewBlocks()
@@ -162,6 +184,7 @@ export default class Game extends Phaser.Scene {
         // console.log(this.cursors.space.onDown())
     }
     gameStep() {
+
         this.stepTimer = 0
         // Check collision for each cell and move down
 
@@ -349,14 +372,38 @@ export default class Game extends Phaser.Scene {
 
     }
 
-    spawnNewBlocks() {
+    spawnNewBlocks(holdBlock = false) {
+        this.holdTurn = false
+        let shapeLetter = ''
+        if (holdBlock) {
+            this.holdTurn = true
+            console.log('About to hold')
+            if (this.registry.holdShape == null) {
+                shapeLetter = this.registry.bag.splice(0, 1)
+            } else {
+                shapeLetter = this.registry.holdShape
+
+            }
+            this.registry.holdShape = this.currentBlocks[0].shape
+
+            // Clear current shapes on grid then clear current blocks
+            this.currentBlocks.forEach(block => {
+                this.grid[block.y][block.x] = false
+            })
+            this.currentBlocks = []
+
+
+        } else {
+            shapeLetter = this.registry.bag.splice(0, 1)
+        }
         if (this.currentBlocks.length > 0) {
             return
         }
         const spawnPosition = { x: 5, y: 1 }
-        let bag = [...Object.keys(Block.shapeCoords)]
-        const shapeIndex = Phaser.Math.Between(0, bag.length - 1)
-        const shapeLetter = bag.splice(shapeIndex, 1)
+        // let bag = [...Object.keys(Block.shapeCoords)]
+        // const shapeIndex = Phaser.Math.Between(0, bag.length - 1)
+
+        console.log(this.registry.bag)
         /** @type {{x: number, y: number, origin: boolean}[]} */
         const shape = Block.shapeCoords[shapeLetter]
         console.table({ shapeLetter })
@@ -364,6 +411,17 @@ export default class Game extends Phaser.Scene {
         shape.forEach((s, index) => {
             this.currentBlocks.push(new Block(shapeLetter, spawnPosition.y + s.y, spawnPosition.x + s.x, s.origin))
         })
+        // Reset bag if needed
+        if (this.registry.bag.length <= 0) {
+            this.registry.bag = [...this.registry.nextBag]
+            this.registry.nextBag = ['J', 'L', 'I', 'O', 'S', 'Z', 'T']
+            this.registry.nextBag.sort(() => Math.random() - 0.5)
+        }
+
+        // Display bag
+
+        console.table(this.registry.bag.concat(this.registry.nextBag))
+
 
 
         // this.currentBlocks.push(new Block('L', 1, 5, true))
